@@ -111,6 +111,23 @@ public class GameplayTests
     }
 
     [Fact]
+    public void The_up_key_runs_the_kid_up_the_screen_and_the_down_key_down_it()
+    {
+        using var input = new InputHandler();
+        var g = Game();
+        input.OnKeyDown(Avalonia.Input.Key.Up);
+        Assert.Equal(-1, input.Controls.Dy);
+        g.Run(30, input.Controls);
+        Assert.True(g.Player.Y < 400 - 100);
+        input.OnKeyUp(Avalonia.Input.Key.Up);
+        input.OnKeyDown(Avalonia.Input.Key.Down);
+        Assert.Equal(1, input.Controls.Dy);
+        g.PutKid(400, 400);
+        g.Run(30, input.Controls);
+        Assert.True(g.Player.Y > 400 + 100);
+    }
+
+    [Fact]
     public void Running_over_a_pile_picks_up_one_thing_and_only_with_empty_hands()
     {
         var g = Game();

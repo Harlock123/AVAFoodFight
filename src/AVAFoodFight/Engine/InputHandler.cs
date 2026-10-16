@@ -3,7 +3,7 @@ using Avalonia.Input;
 namespace AVAFoodFight.Engine;
 
 /// <summary>
-/// Keyboard and gamepad boiled down to the controls: running in eight directions, and throwing whatever food is in hand the way you face.
+/// Keyboard and gamepad boiled down to the controls: running in eight directions (up the screen is -1), and throwing whatever food is in hand the way you face.
 /// </summary>
 public sealed class InputHandler : IDisposable
 {
@@ -28,8 +28,9 @@ public sealed class InputHandler : IDisposable
         {
             int dx = (Any(Key.Right, Key.D, Key.NumPad6) ? 1 : 0) - (Any(Key.Left, Key.A, Key.NumPad4) ? 1 : 0);
             if (dx == 0) dx = _pad.DPadLeft || _pad.LeftStickX < -0.4f ? -1 : _pad.DPadRight || _pad.LeftStickX > 0.4f ? 1 : 0;
-            int dy = (Any(Key.Up, Key.W, Key.NumPad8) ? 1 : 0) - (Any(Key.Down, Key.S, Key.NumPad2) ? 1 : 0);
-            if (dy == 0) dy = _pad.DPadUp || _pad.LeftStickY < -0.4f ? 1 : _pad.DPadDown || _pad.LeftStickY > 0.4f ? -1 : 0;
+            // Down the screen is +1.
+            int dy = (Any(Key.Down, Key.S, Key.NumPad2) ? 1 : 0) - (Any(Key.Up, Key.W, Key.NumPad8) ? 1 : 0);
+            if (dy == 0) dy = _pad.DPadUp || _pad.LeftStickY < -0.4f ? -1 : _pad.DPadDown || _pad.LeftStickY > 0.4f ? 1 : 0;
             bool fire = Any(Key.Space, Key.Z, Key.LeftCtrl, Key.RightCtrl) || _pad.ButtonA || _pad.RightTrigger > 0.5f;
             bool grenade = Any(Key.X, Key.LeftShift, Key.RightShift, Key.C) || _pad.ButtonB || _pad.ButtonX || _pad.LeftTrigger > 0.5f;
             return new Controls(dx, dy, fire || grenade);
